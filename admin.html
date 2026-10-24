@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>IOS-UG Admin (private)</title>
+<link rel="icon" type="image/png" href="images/ios-ug-logo.png">
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-input: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --border: #334155;
+    --ok: #22c55e;
+    --warn: #f59e0b;
+    --bad: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 1rem; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem; flex-wrap: wrap; gap: .5rem; }
+  .logo { font-size: 1.3rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+  .logo small { color: var(--text-muted); font-weight: 600; font-size: .8rem; margin-left: .5rem; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--bad); margin-right: .4rem; }
+  .dot.ok { background: var(--ok); }
+  .dot.warn { background: var(--warn); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; }
+  .card h2 { font-size: .95rem; font-weight: 700; margin-bottom: .75rem; color: var(--text-main); }
+  .row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  input, textarea, select { background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); padding: .6rem .7rem; font-size: .9rem; font-family: inherit; width: 100%; }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: .6rem 1rem; font-size: .9rem; font-weight: 700; cursor: pointer; transition: background .2s; white-space: nowrap; }
+  button:hover { background: var(--accent-hover); }
+  button:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+  button.ghost { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+  button.ghost:hover { border-color: var(--accent); color: var(--accent); }
+  button.danger { background: transparent; border: 1px solid var(--bad); color: var(--bad); padding: .3rem .6rem; font-size: .8rem; }
+  button.danger:hover { background: rgba(239,68,68,.12); }
+  .chip { display: inline-block; padding: .25rem .6rem; border-radius: 999px; border: 1px solid var(--border); font-size: .75rem; color: var(--text-muted); background: var(--bg-input); }
+  .chip.dirty { border-color: var(--warn); color: var(--warn); }
+  .hint { color: var(--text-muted); font-size: .8rem; line-height: 1.5; }
+  .status { font-size: .85rem; min-height: 1.2em; }
+  .status.ok { color: var(--ok); }
+  .status.warn { color: var(--warn); }
+  .status.bad { color: var(--bad); }
+  .list-head { display: flex; align-items: center; justify-content: space-between; margin: .25rem 0 .5rem; }
+  .list-head b { font-size: .95rem; }
+  .app { border: 1px solid var(--border); border-radius: 10px; padding: .6rem; margin-bottom: .5rem; background: rgba(15,23,42,.55); }
+  .app-grid { display: grid; grid-template-columns: 4.5rem 1.4fr 1.2fr 1fr auto; gap: .4rem; align-items: center; }
+  .app-grid input { padding: .45rem .5rem; }
+  .badge-input { text-align: center; font-weight: 800; text-transform: uppercase; }
+  @media (max-width: 720px) {
+    .app-grid { grid-template-columns: 3.5rem 1fr 1fr 1fr; }
+    .app .del { grid-column: span 4; width: 100%; }
+  }
+  .toast { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%); background: var(--bg-card); border: 1px solid var(--border); padding: .8rem 1.2rem; border-radius: 10px; display: none; z-index: 50; box-shadow: 0 10px 30px rgba(0,0,0,.4); max-width: 90vw; }
+  .toast.show { display: block; }
+  details { margin-top: .5rem; }
+  details textarea { min-height: 8rem; margin-top: .4rem; }
+  footer { color: var(--text-muted); font-size: .78rem; text-align: center; padding: 1rem 0; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">IOS-UG Admin <small>apps.json editor</small></div>
+    <div class="hint"><span class="dot" id="dot"></span><span id="conn-label">Not connected</span></div>
+  </header>
+
+  <!-- CONNECTION -->
+  <div class="card">
+    <h2>🔑 Connection</h2>
+    <div class="row">
+      <input type="password" id="token" class="mono" placeholder="Paste your GitHub fine-grained token (ghp_… / github_pat_…)" autocomplete="off" style="flex:1; min-width:220px;">
+      <button id="btn-connect">Connect</button>
+      <button id="btn-disconnect" class="ghost" hidden>Forget</button>
+    </div>
+    <p class="hint" style="margin-top:.6rem;">
+      The token is saved only in this browser (localStorage). It needs <b>Contents: Read &amp; write</b> on the repo
+      <span class="mono">IOS-UG/IOS-UG.github.io</span> (optionally <b>Pages: Read</b> to show build status). Nothing is sent anywhere except api.github.com.
+    </p>
+    <div class="row" style="margin-top:.6rem; gap:.35rem;">
+      <span class="chip" id="chip-file">apps.json: not loaded</span>
+      <span class="chip" id="chip-dirty">clean</span>
+      <span class="chip" id="chip-build">build: —</span>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="card">
+    <h2>🧰 Actions</h2>
+    <div class="row">
+      <button id="btn-reload" disabled>↻ Reload from repo</button>
+      <button id="btn-sync" disabled>📥 Sync from source</button>
+      <button id="btn-commit" disabled>☁️ Commit changes (<span id="dirty-count">0</span>)</button>
+      <button id="btn-open" class="ghost">🌐 Open live site</button>
+    </div>
+    <div class="status" id="status" style="margin-top:.7rem;"></div>
+  </div>
+
+  <!-- SYNC FALLBACK -->
+  <div class="card" id="sync-card" hidden>
+    <h2>📥 Sync from source</h2>
+    <p class="hint" id="sync-msg">Checking the original site's apps.js …</p>
+    <details id="sync-paste" open>
+      <summary class="hint">Automatic fetch blocked — paste here instead</summary>
+      <textarea id="sync-text" class="mono" placeholder="Paste the FULL text of https://website.khoindvn.io.vn/apps.js here, then press Parse…"></textarea>
+      <div class="row" style="margin-top:.5rem;">
+        <button id="btn-parse">Parse text</button>
+        <button id="btn-merge" disabled>Merge new apps</button>
+      </div>
+    </details>
+  </div>
+
+  <!-- LISTS -->
+  <div class="card">
+    <div class="list-head"><b>ESign apps (<span id="count-esign">0</span>)</b><button id="btn-add-esign">＋ Add ESign</button></div>
+    <div id="list-esign"></div>
+  </div>
+
+  <div class="card">
+    <div class="list-head"><b>KSign apps (<span id="count-ksign">0</span>)</b><button id="btn-add-ksign">＋ Add KSign</button></div>
+    <div id="list-ksign"></div>
+  </div>
+
+  <footer>
+    IOS-UG Admin — single-file panel. Edits stay local until you press <b>Commit changes</b>; a commit publishes to
+    https://ios-ug.github.io ~1 minute later. Never share this page or your token.<br>
+    Revoke/regenerate the token at: github.com → Settings → Developer settings → Fine-grained tokens.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var REPO = "IOS-UG/IOS-UG.github.io";
+  var BRANCH = "main";
+  var PATH = "apps.json";
+  var LS_KEY = "iosug_admin_token";
+  var SOURCE_JS = "https://website.khoindvn.io.vn/apps.js";
+
+  var state = { token: "", sha: null, data: { esign: [], ksign: [] }, dirty: false };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- helpers ---------- */
+  function toast(msg) {
+    var t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._h); toast._h = setTimeout(function () { t.classList.remove("show"); }, 3200);
+  }
+  function setStatus(msg, cls) {
+    var s = $("status"); s.textContent = msg; s.className = "status" + (cls ? " " + cls : "");
+  }
+  function getToken() { return state.token || localStorage.getItem(LS_KEY) || ""; }
+
+  function b64ToUtf8(b64) {
+    var bin = atob(b64.replace(/\s/g, ""));
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder("utf-8").decode(bytes);
+  }
+  function utf8ToB64(str) {
+    var bytes = new TextEncoder().encode(str);
+    var bin = ""; var CHUNK = 0x8000;
+    for (var i = 0; i < bytes.length; i += CHUNK) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+    }
+    return btoa(bin);
+  }
+
+  function gh(path, opts) {
+    var token = getToken();
+    if (!token) return Promise.reject(new Error("Not connected — paste a token first"));
+    opts = opts || {};
+    opts.headers = Object.assign({
+      "Accept": "application/vnd.github+json",
+      "Authorization": "Bearer " + token,
+      "X-GitHub-Api-Version": "2022-11-28"
+    }, opts.headers || {});
+    if (opts.body && typeof opts.body !== "string") opts.body = JSON.stringify(opts.body);
+    return fetch("https://api.github.com" + path, opts).then(function (res) {
+      if (!res.ok) {
+        return res.json().catch(function () { return {}; }).then(function (j) {
+          var e = new Error((j && j.message) || ("HTTP " + res.status));
+          e.status = res.status; throw e;
+        });
+      }
+      return res.status === 204 ? null : res.json();
+    });
+  }
+
+  function autoBadge(cat, title) {
+    var base = cat === "esign" ? "E" : "K";
+    var m = (title || "").match(/V(\d+)\s*$/);
+    return base + (m ? m[1] : "");
+  }
+
+  /* ---------- local validation before commits ---------- */
+  function validate() {
+    var i, cat, arr;
+    for (cat in state.data) {
+      arr = state.data[cat] || [];
+      for (i = 0; i < arr.length; i++) {
+        var a = arr[i];
+        if (!/^[a-zA-Z0-9]+$/.test(String(a.plist || ""))) {
+          return "Row " + (i + 1) + " in " + cat + " has an invalid plist id: " + JSON.stringify(a.plist || "");
+        }
+      }
+    }
+    return null;
+  }
+
+  /* ---------- rendering ---------- */
+  function renderAll() {
+    renderCat("esign");
+    renderCat("ksign");
+    updateChips();
+  }
+
+  function renderCat(cat) {
+    var list = $("list-" + cat);
+    list.innerHTML = "";
+    var apps = state.data[cat] || [];
+    $("count-" + cat).textContent = apps.length;
+    apps.forEach(function (app, idx) {
+      var box = document.createElement("div");
+      box.className = "app";
+      var grid = document.createElement("div");
+      grid.className = "app-grid";
+
+      var badge = document.createElement("input");
+      badge.className = "badge-input";
+      badge.value = app.badge || ""; badge.placeholder = cat[0].toUpperCase();
+      badge.addEventListener("input", function () { app.badge = badge.value; markDirty(); });
+
+      var title = document.createElement("input");
+      title.value = app.title || ""; title.placeholder = "App name";
+      title.addEventListener("input", function () { app.title = title.value; markDirty(); });
+
+      var sub = document.createElement("input");
+      sub.value = app.sub || ""; sub.placeholder = "Description";
+      sub.addEventListener("input", function () { app.sub = sub.value; markDirty(); });
+
+      var plist = document.createElement("input");
+      plist.className = "mono";
+      plist.value = app.plist || ""; plist.placeholder = "plist id";
+      plist.addEventListener("input", function () { app.plist = plist.value.trim(); markDirty(); });
+
+      var del = document.createElement("button");
+      del.className = "danger del"; del.textContent = "🗑 Delete";
+      del.addEventListener("click", function () {
+        if (!confirm("Delete \"" + (app.title || "this app") + "\"?")) return;
+        state.data[cat].splice(idx, 1); markDirty(); renderAll();
+      });
+
+      grid.appendChild(badge); grid.appendChild(title); grid.appendChild(sub); grid.appendChild(plist); grid.appendChild(del);
+      box.appendChild(grid);
+      list.appendChild(box);
+    });
+  }
+
+  function updateChips() {
+    var n = 0;
+    n = countDirty();
+    $("dirty-count").textContent = n;
+    var ch = $("chip-dirty");
+    ch.textContent = n ? (n + " unsaved") : "clean";
+    ch.className = "chip" + (n ? " dirty" : "");
+    $("btn-commit").disabled = !(state.sha && n);
+    $("btn-reload").disabled = !state.token;
+    $("btn-sync").disabled = !state.token;
+  }
+
+  function countDirty() {
+    if (!state.cleanJson) return 0;
+    try {
+      var now = JSON.stringify({ esign: state.data.esign, ksign: state.data.ksign });
+      var before = JSON.stringify(JSON.parse(state.cleanJson));
+      return JSON.stringify(sortObj(JSON.parse(now))) === JSON.stringify(sortObj(before)) ? 0 : 1;
+    } catch (e) { return 1; }
+  }
+  function sortObj(o) {
+    if (Array.isArray(o)) return o.map(sortObj);
+    if (o && typeof o === "object") {
+      var r = {}; Object.keys(o).sort().forEach(function (k) { r[k] = sortObj(o[k]); }); return r;
+    }
+    return o;
+  }
+  function markDirty() { state.dirty = true; updateChips(); }
+
+  /* ---------- connect / load / save ---------- */
+  function connect() {
+    var t = $("token").value.trim();
+    if (!t) { toast("Paste a token first"); return; }
+    state.token = t;
+    localStorage.setItem(LS_KEY, t);
+    $("token").value = "";
+    setStatus("Checking token…", "warn");
+    gh("/repos/" + REPO + "/contents/" + PATH + "?ref=" + BRANCH).then(function (j) {
+      state.sha = j.sha;
+      state.data = JSON.parse(b64ToUtf8(j.content));
+      state.cleanJson = JSON.stringify({ esign: state.data.esign, ksign: state.data.ksign });
+      $("dot").className = "dot ok";
+      $("conn-label").textContent = "Connected";
+      $("chip-file").textContent = "apps.json: loaded (" + j.sha.slice(0, 7) + ")";
+      renderAll();
+      setStatus("Loaded " + state.data.esign.length + " ESign + " + state.data.ksign.length + " KSign apps.", "ok");
+      checkBuild();
+    }).catch(function (e) {
+      $("dot").className = "dot"; $("conn-label").textContent = "Not connected";
+      state.token = ""; localStorage.removeItem(LS_KEY);
+      setStatus("Connect failed: " + e.message, "bad");
+      toast("Connect failed: " + e.message);
+    });
+  }
+
+  function disconnect() {
+    state.token = ""; localStorage.removeItem(LS_KEY);
+    $("dot").className = "dot"; $("conn-label").textContent = "Not connected";
+    setStatus("Token forgotten from this browser.", "warn");
+  }
+
+  function reload() {
+    gh("/repos/" + REPO + "/contents/" + PATH + "?ref=" + BRANCH).then(function (j) {
+      state.sha = j.sha;
+      state.data = JSON.parse(b64ToUtf8(j.content));
+      state.cleanJson = JSON.stringify({ esign: state.data.esign, ksign: state.data.ksign });
+      renderAll();
+      setStatus("Reloaded from repo (your unsaved edits were discarded).", "warn");
+    }).catch(function (e) { setStatus("Reload failed: " + e.message, "bad"); });
+  }
+
+  function commit() {
+    var err = validate();
+    if (err) { setStatus(err, "bad"); toast(err); return; }
+    var json = JSON.stringify(state.data, null, 2) + "\n";
+    var clean = JSON.stringify(sortObj(JSON.parse(JSON.stringify({ esign: state.data.esign, ksign: state.data.ksign }))));
+    var before = null;
+    try { before = JSON.stringify(sortObj(JSON.parse(state.cleanJson))); } catch (e) {}
+    if (before === clean) { toast("Nothing changed."); return; }
+
+    $("btn-commit").disabled = true;
+    setStatus("Committing…", "warn");
+    gh("/repos/" + REPO + "/contents/" + PATH, {
+      method: "PUT",
+      body: {
+        message: "Update app list via admin",
+        content: utf8ToB64(json),
+        sha: state.sha,
+        branch: BRANCH
+      }
+    }).then(function (j) {
+      state.sha = j.commit && j.commit.sha ? j.commit.sha : state.sha;
+      state.cleanJson = JSON.stringify({ esign: state.data.esign, ksign: state.data.ksign });
+      $("chip-file").textContent = "apps.json: loaded (" + state.sha.slice(0, 7) + ")";
+      setStatus("Committed " + (j.commit && j.commit.sha ? j.commit.sha.slice(0, 7) : "") + " — Pages is rebuilding, live in ~1 min.", "ok");
+      toast("Committed! Going live in ~1 minute.");
+      updateChips(); checkBuild(true);
+    }).catch(function (e) {
+      if (e.status === 409) {
+        setStatus("Conflict: apps.json changed elsewhere. Press Reload (your unsaved edits will be lost) and redo them.", "bad");
+      } else {
+        setStatus("Commit failed: " + e.message, "bad");
+      }
+      updateChips();
+    });
+  }
+
+  function checkBuild(poll) {
+    var tries = poll ? 15 : 1;
+    var tick = function () {
+      gh("/repos/" + REPO + "/pages/builds/latest").then(function (j) {
+        var st = j.status || "unknown";
+        var chip = $("chip-build");
+        if (st === "built") { chip.textContent = "build: live ✓"; chip.style.color = "var(--ok)"; setStatus("Pages build: done. Site is live.", "ok"); }
+        else if (st === "building" && tries > 1) { chip.textContent = "build: building…"; setTimeout(tick, 8000); }
+        else if (st === "errored") { chip.textContent = "build: failed!"; chip.style.color = "var(--bad)"; setStatus("Pages build FAILED — open the repo Actions tab.", "bad"); }
+        else { chip.textContent = "build: " + st; }
+      }).catch(function () {
+        $("chip-build").textContent = "build: n/a (Pages:Read not allowed for this token)";
+      });
+    };
+    tick();
+  }
+
+  /* ---------- sync from source ---------- */
+  function extractJson(text) {
+    var i = text.indexOf("window.apps");
+    if (i < 0) throw new Error("\"window.apps\" not found in the pasted text");
+    i = text.indexOf("{", i);
+    if (i < 0) throw new Error("No object found after window.apps");
+    var depth = 0, inStr = false, esc = false, end = -1;
+    for (var k = i; k < text.length; k++) {
+      var ch = text.charAt(k);
+      if (inStr) {
+        if (esc) esc = false;
+        else if (ch === "\\") esc = true;
+        else if (ch === "\"") inStr = false;
+      } else if (ch === "\"") inStr = true;
+      else if (ch === "{") depth++;
+      else if (ch === "}") { depth--; if (depth === 0) { end = k + 1; break; } }
+    }
+    if (end < 0) throw new Error("Object after window.apps is not closed");
+    return JSON.parse(text.slice(i, end));
+  }
+
+  function parseAppsJs(text) {
+    var data = extractJson(text);
+    var out = { esign: [], ksign: [] };
+    ["esign", "ksign"].forEach(function (cat) {
+      (data[cat] || []).forEach(function (item) {
+        var plistM = (item.url || "").match(/plists\/([a-zA-Z0-9]+)\.plist/);
+        if (!plistM) return;
+        out[cat].push({
+          title: item.name || (cat === "esign" ? "ESign" : "KSign"),
+          sub: item.descriptions || item.description || "",
+          plist: plistM[1],
+          badge: autoBadge(cat, item.name)
+        });
+      });
+    });
+    return out;
+  }
+
+  function runSync(text, fromPaste) {
+    var src;
+    try { src = parseAppsJs(text); }
+    catch (e) { syncMsg("Could not parse: " + e.message, "bad"); return; }
+    var added = { esign: [], ksign: [] };
+    ["esign", "ksign"].forEach(function (cat) {
+      var have = {};
+      (state.data[cat] || []).forEach(function (a) { have[a.plist] = true; });
+      src[cat].forEach(function (a) { if (!have[a.plist]) added[cat].push(a); });
+    });
+    var total = added.esign.length + added.ksign.length;
+    if (!total) { syncMsg("Already in sync — nothing new on the source site.", "ok"); return; }
+    window._pendingMerge = added;
+    syncMsg("Found " + total + " new app(s): " + added.esign.length + " ESign, " + added.ksign.length + " KSign. Press Merge to add them (not committed yet — review then Commit).", (fromPaste ? "warn" : "ok"));
+    $("btn-merge").disabled = false;
+    $("sync-paste").open = !!fromPaste;
+  }
+
+  function syncMsg(msg, cls) { var el = $("sync-msg"); el.textContent = msg; el.className = "hint " + (cls || ""); }
+
+  function tryAutoSync() {
+    $("sync-card").hidden = false;
+    syncMsg("Downloading https://website.khoindvn.io.vn/apps.js …", "warn");
+    fetch(SOURCE_JS, { cache: "no-store" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.text();
+    }).then(function (t) { runSync(t, false); })
+      .catch(function () {
+        $("sync-card").hidden = false;
+        $("sync-paste").open = true;
+        syncMsg("Direct fetch blocked by the source site (CORS). Open " + SOURCE_JS + " in a new tab, copy ALL text, paste it below, then press Parse.", "warn");
+      });
+  }
+
+  function merge() {
+    var added = window._pendingMerge;
+    if (!added) return;
+    ["esign", "ksign"].forEach(function (cat) {
+      added[cat].forEach(function (a) { state.data[cat].push(a); });
+    });
+    window._pendingMerge = null;
+    $("btn-merge").disabled = true;
+    markDirty(); renderAll();
+    setStatus("Merged " + (added.esign.length + added.ksign.length) + " apps locally. Review, then press Commit changes.", "warn");
+  }
+
+  /* ---------- add rows ---------- */
+  function addApp(cat) {
+    state.data[cat].push({
+      title: cat === "esign" ? "ESign" : "KSign",
+      sub: "",
+      plist: "",
+      badge: autoBadge(cat, cat === "esign" ? "ESign" : "KSign")
+    });
+    markDirty(); renderCat(cat);
+    var rows = $("list-" + cat).children;
+    if (rows.length) rows[rows.length - 1].scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  /* ---------- wiring ---------- */
+  $("btn-connect").addEventListener("click", connect);
+  $("btn-disconnect").addEventListener("click", disconnect);
+  $("btn-reload").addEventListener("click", reload);
+  $("btn-commit").addEventListener("click", commit);
+  $("btn-sync").addEventListener("click", tryAutoSync);
+  $("btn-parse").addEventListener("click", function () { runSync($("sync-text").value, true); });
+  $("btn-merge").addEventListener("click", merge);
+  $("btn-add-esign").addEventListener("click", function () { addApp("esign"); });
+  $("btn-add-ksign").addEventListener("click", function () { addApp("ksign"); });
+  $("btn-open").addEventListener("click", function () { window.open("https://ios-ug.github.io", "_blank", "noopener"); });
+  $("token").addEventListener("keydown", function (e) { if (e.key === "Enter") connect(); });
+
+  if (getToken()) {
+    $("dot").className = "dot warn";
+    $("conn-label").textContent = "Saved token found — press Connect";
+  }
+  renderAll();
+  subscribeBadgeEdits();
+
+  /* input handler nudge: badge/title/sub topics handled inline above */
+
+  function subscribeBadgeEdits() { /* placeholder: inputs already bound at render */ }
+})();
+</script>
+</body>
+</html>
