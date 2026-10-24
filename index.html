@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<title>IOS-UG</title>
+<meta name="description" content="IOS-UG — ESign &amp; KSign iOS certificate installer">
+<meta name="keywords" content="ios-ug, esign, ksign, ios signer, sideload, ipa installer, no pc, unsigned apps">
+<link rel="stylesheet" href="css/styles.cAK2LvzX.css">
+<link rel="stylesheet" href="css/home.CX5VkymU.css">
+<link rel="icon" type="image/png" href="images/profile-pic.png">
+<style>
+  /* ============ IOS-UG DARK BLUE THEME ============ */
+  :root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-header: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --border: #334155;
+    --warn: #ef4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+  /* Header / Nav */
+  header {
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .nav-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text-main); }
+
+  /* Hero */
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1rem 2rem;
+    text-align: center;
+  }
+
+  .hero-inner { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+
+  .hero-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--accent);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+  }
+
+  .hero-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .hero-typing {
+    font-size: 1.1rem;
+    color: var(--accent);
+    min-height: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .cursor {
+    color: var(--accent);
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-desc {
+    margin-top: 1rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Social buttons */
+  .social-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .social-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    transition: all 0.2s;
+  }
+
+  .social-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .social-btn svg { width: 22px; height: 22px; }
+
+  /* Section label */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 2.5rem 1rem 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* Links section */
+  .links-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+  }
+
+  .links-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .link-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .link-row:last-child { border-bottom: none; }
+
+  .link-row:hover { background: rgba(59, 130, 246, 0.05); }
+
+  .link-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .link-icon-wrap svg { width: 24px; height: 24px; }
+
+  .link-label { color: var(--text-main); font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
+
+  .link-label span { display: block; }
+
+  .link-label span:nth-child(2) { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+  .link-open-btn {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted);
+  }
+
+  /* Tabs ESign / KSign */
+  .seg-wrap {
+    max-width: 1200px;
+    margin: 0 auto 1rem;
+    padding: 0 1rem;
+  }
+
+  .seg-track {
+    display: flex;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+  }
+
+  .seg-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .seg-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  }
+
+  .seg-btn:not(.active):hover { color: var(--text-main); }
+
+  /* App panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .apps-wrap { max-width: 1200px; margin: 0 auto; padding: 0 1rem 2rem; }
+
+  .esign-section, .ksign-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .app-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .app-row:hover {
+    border-color: var(--accent);
+    background: rgba(59, 130, 246, 0.05);
+    transform: translateY(-2px);
+  }
+
+  .app-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #0f172a;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .app-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+  }
+
+  .app-text { flex: 1; min-width: 0; }
+
+  .app-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+  }
+
+  .app-sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .app-action {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .app-row:hover .app-action {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  /* Skills */
+  .skills-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+  }
+
+  .skills-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+
+  .skills-card h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+  }
+
+  .skill-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .skill-name {
+    width: 90px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .skill-track {
+    flex: 1;
+    height: 8px;
+    background: #0f172a;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .skill-fill {
+    height: 100%;
+    border-radius: 4px;
+    width: 0%;
+    transition: width 1s ease;
+  }
+
+  .skill-pct {
+    width: 40px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Legal links */
+  .legal-links {
+    max-width: 1200px;
+    margin: 2rem auto 1rem;
+    padding: 0 1rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .legal-links a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .legal-links a:hover { color: var(--accent); }
+
+  .legal-links span { color: var(--border); margin: 0 0.25rem; }
+
+  /* Footer */
+  .site-footer {
+    max-width: 1200px;
+    margin: 2rem auto 2rem;
+    padding: 0 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+  }
+
+  .site-footer a { color: var(--accent); }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 1000;
+    animation: slideUp 0.3s ease;
+  }
+
+  #toast.show { display: block; }
+
+  @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .hero-name { font-size: 1.75rem; }
+    .navbar { flex-direction: column; align-items: stretch; gap: 1rem; }
+    .nav-links { justify-content: center; }
+    .link-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .link-open-btn { margin-left: 0; align-self: flex-end; }
+    .skill-row { gap: 0.75rem; }
+    .skill-name { width: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="navbar" aria-label="Chính">
+    <a href="/" class="nav-logo">IOS-UG</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about"><span class="lang-vi">Trang chủ</span><span class="lang-en">Home</span></a></li>
+      <li><a href="#links"><span class="lang-vi">Dịch vụ</span><span class="lang-en">Services</span></a></li>
+      <li><a href="#bypass"><span class="lang-vi">ESign / KSign</span><span class="lang-en">ESign / KSign</span></a></li>
+      <li><a href="#skills"><span class="lang-vi">Kỹ năng</span><span class="lang-en">Skills</span></a></li>
+      <li><a href="#disclaimer"><span class="lang-vi">Thỏa thuận</span><span class="lang-en">ToS</span></a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero" id="about" aria-labelledby="hero-name">
+  <div class="hero-inner">
+    <img src="images/profile-pic.BUl09C54_Z2btdvj.webp" alt="Avatar IOS-UG" loading="eager" decoding="async" width="2560" height="2560" class="hero-avatar">
+    <h1 class="hero-name" id="hero-name">IOS-UG</h1>
+    <p class="hero-typing"><span id="typed-text"></span><span class="cursor">|</span></p>
+    <p class="hero-desc">
+      <span class="lang-vi">Cài đặt ứng dụng iOS không cần máy tính với <strong>ESign / KSign</strong> certificates.</span>
+      <span class="lang-en">Install iOS apps without a computer using <strong>ESign / KSign</strong> certificates.</span>
+    </p>
+    <div class="social-buttons" aria-label="Mạng xã hội">
+      <a href="https://t.me/UGios" target="_blank" rel="noopener" class="social-btn" aria-label="telegram" title="Telegram">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.7 3.3L2.3 10.2c-.9.4-.9 1 0 1.2l4.6 1.4 1.7 5.3c.2.6.4.8.8.8.4 0 .6-.2.9-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.7l3-14.2c.3-1.1-.4-1.6-1.1-1.5zm-3.4 4.4L9 14.5l-.3 3.3-1.7-5.3 11.3-4.8z" fill="#2196f3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- LINKS -->
+<span class="section-label" id="links">
+  <span class="lang-vi">Dịch vụ &amp; Liên kết</span>
+  <span class="lang-en">Services &amp; Links</span>
+</span>
+<div class="links-section">
+  <div class="links-card">
+    <a class="link-row" href="https://t.me/UGios" target="_blank" rel="noopener">
+      <span class="link-icon-wrap" style="background:#e3f2fd;">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21.8 2.2L1.4 10c-1.3.5-1.3 1.3-.2 1.6l5.2 1.6 1.9 5.9c.3.8.4 1 1 1 .5 0 .7-.2 1-.6l2.5-2.4 5.2 3.8c1 .5 1.7.3 1.9-.9l3.4-16c.4-1.5-.5-2.2-1.5-1.8z" fill="#2196f3"></path>
+          <path d="M8.8 13.4l.4 4.6 2.3-2.2-2.7-2.4z" fill="#1565c0"></path>
+        </svg>
+      </span>
+      <span class="link-label">
+        <span style="font-weight: 600;"><span class="lang-vi">Kênh Telegram chính thức</span><span class="lang-en">Official Telegram Channel</span></span>
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">t.me/UGios</span>
+      </span>
+      <span class="link-open-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </span>
+    </a>
+  </div>
+</div>
+
+<!-- TABS ESign vs KSign -->
+<div class="seg-wrap" id="bypass" role="tablist" aria-label="Chọn loại chứng chỉ">
+  <div class="seg-track">
+    <div class="seg-thumb" id="seg-thumb"></div>
+    <button class="seg-btn active" id="tab-esign" role="tab" aria-selected="true" aria-controls="panel-esign">ESign</button>
+    <button class="seg-btn" id="tab-ksign" role="tab" aria-selected="false" aria-controls="panel-ksign">KSign</button>
+  </div>
+</div>
+
+<div id="panel-esign" role="tabpanel" aria-labelledby="tab-esign" class="tab-panel active">
+  <div class="apps-wrap">
+    <div class="esign-section" id="esign-list">
+      <div class="app-row" data-plist="gcocahddcinl"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">RAKUTEN</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="fnenfnfigggm"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">Vietnam Electricity</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="kagnpjhmkmjp"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">Beihang University</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="kjjcnffojofo"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">VINWASH</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="idcpodehdgbm"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">HSBC Bank</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="ckahjfoobmdn"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">CENTRAL POWER</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="nicnfhfmckpb"><div class="app-icon"><span class="app-badge">E1</span></div><div class="app-text"><div class="app-title">ESign Central Power V1</div><div class="app-sub">CENTRAL POWER</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="namafilokpoh"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">Jiangsu Simcere</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="jgkbnpmnlaed"><div class="app-icon"><span class="app-badge">E1</span></div><div class="app-text"><div class="app-title">ESign Jiangsu Simcere V1</div><div class="app-sub">Jiangsu Simcere</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="dgjfclelmbbj"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">Moving Increasingly</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="kpcbaajmkbon"><div class="app-icon"><span class="app-badge">E1</span></div><div class="app-text"><div class="app-title">ESign Moving Increasingly V1</div><div class="app-sub">Moving Increasingly</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="pghpdpcgblmp"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">China Telecom</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="bhpiamjijnip"><div class="app-icon"><span class="app-badge">E1</span></div><div class="app-text"><div class="app-title">ESign China Telecom V1</div><div class="app-sub">China Telecom</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="dkdgcdnjieff"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">Qingdao Rural</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="kfccjimokhko"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">National Oilwell</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="jilleopfhlag"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="ionmpkdkbjfl"><div class="app-icon"><span class="app-badge">E1</span></div><div class="app-text"><div class="app-title">ESign BOC V1</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="kkadkilafalg"><div class="app-icon"><span class="app-badge">E2</span></div><div class="app-text"><div class="app-title">ESign BOC V2</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="jodbddhkdjdp"><div class="app-icon"><span class="app-badge">E3</span></div><div class="app-text"><div class="app-title">ESign BOC V3</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="apedpcajmiki"><div class="app-icon"><span class="app-badge">E</span></div><div class="app-text"><div class="app-title">ESign</div><div class="app-sub">PowerChina</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="eoekkbmccjbc"><div class="app-icon"><span class="app-badge">E1</span></div><div class="app-text"><div class="app-title">ESign PowerChina V1</div><div class="app-sub">PowerChina</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="hegmnlhdholo"><div class="app-icon"><span class="app-badge">E2</span></div><div class="app-text"><div class="app-title">ESign PowerChina V2</div><div class="app-sub">PowerChina</div></div><div class="app-action">INSTALL</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-ksign" role="tabpanel" aria-labelledby="tab-ksign" class="tab-panel">
+  <div class="apps-wrap">
+    <div class="ksign-section" id="ksign-list">
+      <div class="app-row" data-plist="dphpgblmlojd"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">RAKUTEN</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="geadoiiloimh"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">Vietnam Electricity</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="gdkhlfchmfof"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">Beihang University</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="gmkhipcnkilk"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">VINWASH</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="pbemcddlcpho"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">HSBC Bank</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="lcfpeiedkheg"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">CENTRAL POWER</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="dnnpggekacnm"><div class="app-icon"><span class="app-badge">K1</span></div><div class="app-text"><div class="app-title">KSign Central Power V1</div><div class="app-sub">CENTRAL POWER</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="mlieeiadepah"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">Jiangsu Simcere</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="lodjpjcljdpi"><div class="app-icon"><span class="app-badge">K1</span></div><div class="app-text"><div class="app-title">KSign Jiangsu Simcere V1</div><div class="app-sub">Jiangsu Simcere</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="imppbfhicihh"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">Moving Increasingly</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="cmedecbjfimo"><div class="app-icon"><span class="app-badge">K1</span></div><div class="app-text"><div class="app-title">KSign Moving Increasingly V1</div><div class="app-sub">Moving Increasingly</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="phcfgoaomgja"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">China Telecom</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="aomjaecngfnl"><div class="app-icon"><span class="app-badge">K1</span></div><div class="app-text"><div class="app-title">KSign China Telecom V1</div><div class="app-sub">China Telecom</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="lkcmbkcaibjd"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">Qingdao Rural</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="mhgbkhplggio"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">National Oilwell</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="lmmjphdncjkf"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="dgiepohhpeff"><div class="app-icon"><span class="app-badge">K1</span></div><div class="app-text"><div class="app-title">KSign BOC V1</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="hchbhebffgmj"><div class="app-icon"><span class="app-badge">K2</span></div><div class="app-text"><div class="app-title">KSign BOC V2</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="joabkofbfegf"><div class="app-icon"><span class="app-badge">K3</span></div><div class="app-text"><div class="app-title">KSign BOC V3</div><div class="app-sub">BOC</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="ckfhgnefppjp"><div class="app-icon"><span class="app-badge">K</span></div><div class="app-text"><div class="app-title">KSign</div><div class="app-sub">PowerChina</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="fbnokebbnpco"><div class="app-icon"><span class="app-badge">K1</span></div><div class="app-text"><div class="app-title">KSign PowerChina V1</div><div class="app-sub">PowerChina</div></div><div class="app-action">INSTALL</div></div>
+      <div class="app-row" data-plist="bbememhbfidk"><div class="app-icon"><span class="app-badge">K2</span></div><div class="app-text"><div class="app-title">KSign PowerChina V2</div><div class="app-sub">PowerChina</div></div><div class="app-action">INSTALL</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<span class="section-label" id="skills">
+  <span class="lang-vi">Kỹ năng</span>
+  <span class="lang-en">Skills</span>
+</span>
+<section class="skills-section" aria-labelledby="skills-h">
+  <div class="skills-card">
+    <h2 id="skills-h"><span class="lang-vi">Kỹ năng Lập trình</span><span class="lang-en">Programming Skills</span></h2>
+    <div class="skill-row">
+      <span class="skill-name">HTML/CSS</span>
+      <div class="skill-track"><div class="skill-fill" data-pct="76%" style="background:#3b82f6"></div></div>
+      <span class="skill-pct">76%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Lua</span>
+      <div class="skill-track"><div class="skill-fill" data-pct="68%" style="background:#3b82f6"></div></div>
+      <span class="skill-pct">68%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">PHP</span>
+      <div class="skill-track"><div class="skill-fill" data-pct="12%" style="background:#3b82f6"></div></div>
+      <span class="skill-pct">12%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">MySQL</span>
+      <div class="skill-track"><div class="skill-fill" data-pct="9%" style="background:#3b82f6"></div></div>
+      <span class="skill-pct">9%</span>
+    </div>
+  </div>
+</section>
+
+<!-- LEGAL LINKS -->
+<div class="legal-links">
+  <a href="#disclaimer"><span class="lang-vi">Điều khoản và Điều kiện</span><span class="lang-en">Terms &amp; Conditions</span></a>
+  <span>|</span>
+  <a href="#disclaimer"><span class="lang-vi">Thỏa thuận người dùng</span><span class="lang-en">User Agreement</span></a>
+  <span>|</span>
+  <a href="#disclaimer"><span class="lang-vi">Chính sách Bảo mật</span><span class="lang-en">Privacy Policy</span></a>
+</div>
+
+<!-- DISCLAIMER -->
+<span class="section-label" id="disclaimer">
+  <span class="lang-vi">Miễn trừ trách nhiệm</span>
+  <span class="lang-en">Disclaimer</span>
+</span>
+<div style="padding: 0 1.5rem 2rem; max-width: 800px; margin: 0 auto;">
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; color: var(--text-main); font-size: 0.95rem; line-height: 1.6; text-align: justify; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+    <p class="lang-en" style="margin: 0;"><strong style="color: var(--warn);">Note:</strong> All information, applications, and certificates (if any) on this website are provided solely for educational, learning, and personal experience purposes. We <b>DO NOT</b> encourage copyright infringement in any form. Users bear full legal responsibility for any risks, losses, or copyright issues arising from downloading and installing. We disclaim any liability related to your actions and purpose of usage.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="lang-vi">Bản quyền © 2026 IOS-UG. Đã đăng ký bản quyền.</div>
+  <div class="lang-en">Copyright © 2026 IOS-UG. All rights reserved.</div>
+</footer>
+
+<!-- Local toast -->
+<div id="toast">
+  <div id="toast-msg"></div>
+</div>
+
+<script type="module">
+  /* ============ TYPING EFFECT ============ */
+  const texts = ["ESign.", "KSign.", "Developer."];
+  let c = 0, l = 0, u = false;
+  const s = document.getElementById("typed-text");
+  function d() {
+    const e = texts[c];
+    if (u) {
+      s && (s.textContent = e.slice(0, --l));
+      if (l === 0) { u = false; c = (c + 1) % texts.length; setTimeout(d, 1500); return; }
+      setTimeout(d, 60);
+    } else {
+      s && (s.textContent = e.slice(0, ++l));
+      if (l === e.length) { u = true; setTimeout(d, 2000); return; }
+      setTimeout(d, 90);
+    }
+  }
+  setTimeout(d, 500);
+
+  /* ============ TAB SWITCHING ============ */
+  const f = document.getElementById("tab-esign"), p = document.getElementById("tab-ksign"), m = document.getElementById("panel-esign"), h = document.getElementById("panel-ksign"), g = document.getElementById("seg-thumb");
+  function _(e) {
+    if (e === "esign") {
+      f && f.classList.add("active"); p && p.classList.remove("active");
+      f && f.setAttribute("aria-selected", "true"); p && p.setAttribute("aria-selected", "false");
+      m && m.classList.add("active"); h && h.classList.remove("active");
+      g && (g.style.transform = "translateX(0)");
+    } else {
+      p && p.classList.add("active"); f && f.classList.remove("active");
+      p && p.setAttribute("aria-selected", "true"); f && f.setAttribute("aria-selected", "false");
+      m && m.classList.remove("active"); h && h.classList.add("active");
+      g && f && (g.style.transform = `translateX(${f.offsetWidth}px)`);
+    }
+  }
+  f && f.addEventListener("click", () => _("esign"));
+  p && p.addEventListener("click", () => _("ksign"));
+
+  /* ============ SKILLS ANIMATION ============ */
+  const v = document.querySelectorAll(".skill-fill");
+  const b = () => { v.forEach(el => { const t = el.getAttribute("data-pct"); t && (el.style.width = t); }); };
+  const y = document.querySelector(".skills-card");
+  const x = () => { if (y && y.getBoundingClientRect().top < window.innerHeight) { b(); window.removeEventListener("scroll", x); } };
+  window.addEventListener("scroll", x, { passive: true });
+  x();
+
+  /* ============ APP INSTALL (original ESign / KSign manifests) ============ */
+  document.querySelectorAll('.app-row[data-plist]').forEach(row => {
+    row.addEventListener('click', () => {
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (!isIOS) {
+        showToast('Open this page in Safari on iPhone/iPad to install');
+        return;
+      }
+      window.location.href = 'itms-services://?action=download-manifest&url=https://website.khoindvn.io.vn/plists/' + row.dataset.plist + '.plist';
+    });
+  });
+
+  /* ============ TOAST ============ */
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    document.getElementById("toast-msg").textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2500);
+  }
+</script>
+
+</body>
+</html>
