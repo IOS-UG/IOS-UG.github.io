@@ -31,18 +31,23 @@
     --red: #ff4d4d;
     --cyan: #7ddcff;
     --ink: #04140a;
-    --frost: rgba(125, 211, 252, 0.22);
+    --frost: rgba(125, 211, 252, 0.30);
     --mono: "JetBrains Mono", "Fira Code", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { scroll-behavior: smooth; }
+  html {
+    background: var(--bg);
+    scroll-behavior: smooth;
+  }
 
-  html, body {
+  /* body stays TRANSPARENT — the fixed matrix canvas (z-index:-10)
+     paints behind every layer and must be allowed to show through */
+  body {
     width: 100%;
     min-height: 100%;
-    background: var(--bg);
+    background: transparent;
     color: var(--text);
     font-family: var(--mono);
     font-size: 14px;
@@ -56,6 +61,9 @@
   ::selection { background: var(--green); color: var(--ink); }
   :focus-visible { outline: 2px solid var(--green-hi); outline-offset: 2px; }
 
+  /* ENGLISH-ONLY UI — Vietnamese strings stay in markup for reference, never rendered */
+  .lang-vi { display: none !important; }
+
   /* ---------- matrix backdrop: unmissable ---------- */
   #matrix {
     position: fixed;
@@ -64,7 +72,7 @@
     height: 100%;
     z-index: -10;
     pointer-events: none;
-    opacity: 0.85;
+    opacity: 1;
   }
 
   /* CRT scanlines above the rain */
@@ -99,18 +107,22 @@
     overflow: hidden;
     max-width: 1200px;
     margin: 0 auto 2.5rem;
-    background: linear-gradient(
-      145deg,
-      rgba(23, 44, 58, 0.34),
-      rgba(7, 14, 15, 0.62) 58%,
-      rgba(13, 27, 33, 0.38)
-    );
-    -webkit-backdrop-filter: blur(12px) saturate(1.3);
-    backdrop-filter: blur(12px) saturate(1.3);
+    /* glass rim highlight painted ON as the first background layer */
+    background:
+      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent) top / 100% 1px no-repeat,
+      linear-gradient(
+        145deg,
+        rgba(23, 44, 58, 0.30),
+        rgba(7, 14, 15, 0.56) 58%,
+        rgba(13, 27, 33, 0.34)
+      );
+    -webkit-backdrop-filter: blur(20px) saturate(1.5) brightness(1.05);
+    backdrop-filter: blur(20px) saturate(1.5) brightness(1.05);
     border: 1px solid var(--frost);
     box-shadow:
-      inset 0 0 0 1px rgba(125, 211, 252, 0.14),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      inset 0 0 0 1px rgba(125, 211, 252, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.10),
+      0 0 70px -34px rgba(56, 189, 248, 0.55);
   }
   .window::after {
     content: "";
@@ -121,13 +133,13 @@
     background: linear-gradient(
       115deg,
       transparent,
-      rgba(148, 214, 255, 0.05) 45%,
-      rgba(255, 255, 255, 0.09) 50%,
-      rgba(148, 214, 255, 0.05) 55%,
+      rgba(148, 214, 255, 0.08) 45%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(148, 214, 255, 0.08) 55%,
       transparent
     );
     transform: translateX(-45%);
-    animation: sheen 10s ease-in-out infinite;
+    animation: sheen 7s ease-in-out infinite;
   }
   @keyframes sheen {
     0% { transform: translateX(-45%); }
@@ -139,8 +151,10 @@
     align-items: center;
     gap: 0.6rem;
     padding: 0.5rem 0.9rem;
-    background: linear-gradient(180deg, rgba(17, 36, 48, 0.85), rgba(10, 16, 11, 0.95));
-    border-bottom: 1px solid rgba(125, 211, 252, 0.16);
+    background: linear-gradient(180deg, rgba(17, 36, 48, 0.60), rgba(10, 16, 11, 0.80));
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(125, 211, 252, 0.22);
   }
   .term-dots { display: inline-flex; gap: 5px; }
   .term-dots i { display: inline-block; width: 8px; height: 8px; border-radius: 999px; }
@@ -315,6 +329,17 @@
     background: rgba(34, 224, 95, 0.14);
     color: var(--green-hi);
   }
+  /* VIP = solid gold */
+  .btn-sh.vip {
+    background: linear-gradient(160deg, #ffd25e, #ffb020);
+    border-color: rgba(255, 210, 94, 0.75);
+    color: #14100a;
+  }
+  .btn-sh.vip:hover {
+    background: #ffd25e;
+    box-shadow: 0 0 30px -6px rgba(255, 194, 51, 0.65);
+    color: #14100a;
+  }
 
   .hero-meta {
     margin-top: 1.2rem;
@@ -469,6 +494,12 @@
     flex-shrink: 0;
   }
   .link-icon-wrap svg { width: 24px; height: 24px; }
+
+  .link-icon-wrap.vip {
+    border-color: rgba(255, 194, 51, 0.50);
+    background: rgba(255, 194, 51, 0.10);
+    box-shadow: 0 0 20px -6px rgba(255, 194, 51, 0.45);
+  }
 
   .link-label { color: var(--text); font-weight: 600; font-size: 0.9rem; line-height: 1.35; }
   .link-label span { display: block; }
@@ -872,6 +903,7 @@
 
           <div class="cta-row">
             <a href="#bypass" class="btn-sh">install_section <span aria-hidden="true">&gt;&gt;</span></a>
+            <a href="https://ios-underground-web.web.app" target="_blank" rel="noopener" class="btn-sh vip">buy vip certificate</a>
             <a href="https://t.me/UGios" target="_blank" rel="noopener" class="btn-sh ghost">telegram --open</a>
           </div>
 
@@ -918,8 +950,8 @@
   <!-- ============ MARQUEE ============ -->
   <div class="marquee rise" aria-hidden="true">
     <div class="marquee-track">
-      <span>esign installers</span><span>ksign installers</span><span>no pc sideload</span><span>ios certificates</span><span>telegram support</span><span>admin verified</span>
-      <span>esign installers</span><span>ksign installers</span><span>no pc sideload</span><span>ios certificates</span><span>telegram support</span><span>admin verified</span>
+      <span>esign installers</span><span>ksign installers</span><span>no pc sideload</span><span>ios certificates</span><span>telegram support</span><span>buy vip certificate</span><span>admin verified</span>
+      <span>esign installers</span><span>ksign installers</span><span>no pc sideload</span><span>ios certificates</span><span>telegram support</span><span>buy vip certificate</span><span>admin verified</span>
     </div>
   </div>
 
@@ -981,6 +1013,26 @@
         <span class="link-label">
           <span><span class="lang-vi">Kênh Telegram chính thức</span><span class="lang-en">Official Telegram Channel</span></span>
           <span>t.me/UGios — certified &amp; verified</span>
+        </span>
+        <span class="link-open-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </span>
+      </a>
+
+      <a class="link-row" href="https://ios-underground-web.web.app" target="_blank" rel="noopener">
+        <span class="link-icon-wrap vip">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L20 12L12 22L4 12Z" fill="#ffc233"></path>
+            <path d="M12 2L20 12H4L12 2Z" fill="#ffd25e"></path>
+          </svg>
+        </span>
+        <span class="link-label">
+          <span>UG Store — Buy VIP certificates</span>
+          <span>ios-underground-web.web.app — buy vip certificate</span>
         </span>
         <span class="link-open-btn">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -1088,7 +1140,7 @@
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     w = window.innerWidth;
     h = window.innerHeight;
-    size = w < 700 ? 11 : 13;
+    size = w < 700 ? 12 : 15;
     c.width = Math.floor(w * dpr);
     c.height = Math.floor(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1100,10 +1152,10 @@
   }
 
   function frame(t) {
-    if (t - last < 38) { requestAnimationFrame(frame); return; }
+    if (t - last < 34) { requestAnimationFrame(frame); return; }
     last = t;
     if (!document.hidden) {
-      ctx.fillStyle = "rgba(5, 8, 5, 0.13)";
+      ctx.fillStyle = "rgba(5, 8, 5, 0.10)";
       ctx.fillRect(0, 0, w, h);
       ctx.font = size + 'px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
       for (var i = 0; i < cols.length; i++) {
@@ -1111,9 +1163,9 @@
         if (y > 0) {
           var g = GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
           var r = Math.random();
-          if (r < 0.03) ctx.fillStyle = "rgba(240, 255, 248, 0.95)";        // white-hot head
-          else if (r < 0.10) ctx.fillStyle = "rgba(125, 220, 255, 0.9)";    // cyan glint
-          else ctx.fillStyle = "rgba(34, 224, 95, " + (0.38 + Math.random() * 0.4).toFixed(2) + ")";
+          if (r < 0.05) ctx.fillStyle = "rgba(240, 255, 248, 0.95)";        // white-hot head
+          else if (r < 0.16) ctx.fillStyle = "rgba(125, 220, 255, 0.9)";    // cyan glint
+          else ctx.fillStyle = "rgba(34, 224, 95, " + (0.5 + Math.random() * 0.45).toFixed(2) + ")";
           ctx.fillText(g, i * size, y);
         }
         cols[i] = (y > h && Math.random() > 0.968) ? 0 : cols[i] + 1;
